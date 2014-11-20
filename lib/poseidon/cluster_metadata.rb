@@ -50,13 +50,13 @@ module Poseidon
     # Return lead broker for topic and partition
     def lead_broker_for_partition(topic_name, partition)
       topic_metadata = @topic_metadata[topic_name]
-      return nil if topic_metadata.nil?
+      raise Poseidon::Errors::UnableToFetchMetadata, "topic: #{topic_name}" if topic_metadata.nil?
       
       broker_id = topic_metadata.partition_leader(partition)
       if broker_id
         @brokers[broker_id]
       else
-        nil
+        raise Poseidon::Errors::NotLeaderForPartition, "topic: #{topic_name}, partition: #{partition}, broker_id: #{broker_id}"
       end
     end
 
