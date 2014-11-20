@@ -49,7 +49,10 @@ module Poseidon
 
     # Return lead broker for topic and partition
     def lead_broker_for_partition(topic_name, partition)
-      broker_id = @topic_metadata[topic_name].partition_leader(partition)
+      topic_metadata = @topic_metadata[topic_name]
+      return nil if topic_metadata.nil?
+      
+      broker_id = topic_metadata.partition_leader(partition)
       if broker_id
         @brokers[broker_id]
       else

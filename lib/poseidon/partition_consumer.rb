@@ -29,7 +29,11 @@ module Poseidon
 
         cluster_metadata.lead_broker_for_partition(topic, partition)
       end
-
+      
+      if broker.nil?
+        raise Poseidon::Errors::UnableToFetchMetadata
+      end
+      
       new(client_id, broker.host, broker.port, topic, partition, offset, options)
     end
 
