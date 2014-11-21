@@ -88,6 +88,8 @@ module Poseidon
     OPTION_DEFAULTS = {
       :type => :sync
     }
+    
+    attr_reader :producer
 
     # Returns a new Producer.
     #

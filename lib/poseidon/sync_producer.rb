@@ -25,7 +25,8 @@ module Poseidon
     }
 
     attr_reader :client_id, :retry_backoff_ms, :max_send_retries,
-      :metadata_refresh_interval_ms, :required_acks, :ack_timeout_ms, :socket_timeout_ms
+      :metadata_refresh_interval_ms, :required_acks, :ack_timeout_ms, :socket_timeout_ms,
+      :cluster_metadata, :broker_pool
     def initialize(client_id, seed_brokers, options = {})
       @client_id = client_id
 
