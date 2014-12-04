@@ -70,6 +70,38 @@ module Poseidon
       end
     end
 
+    def send_messages2(messages)
+      return true if messages.empty?
+
+      messages_to_send = MessagesToSend.new(messages, @cluster_metadata)
+
+      if refresh_interval_elapsed?
+        refresh_metadata(messages_to_send.topic_set)
+      end
+
+      ensure_metadata_available_for_topics(messages_to_send)
+
+      (@max_send_retries+1).times do
+        messages_to_send.messages_for_brokers(@message_conductor).each do |messages_for_broker|
+          if sent = send_to_broker(messages_for_broker)
+            messages_to_send.successfully_sent(sent)
+          end
+        end
+
+        if !messages_to_send.pending_messages? || @max_send_retries == 0
+          break
+        else
+          Kernel.sleep retry_backoff_ms / 1000.0
+          refresh_metadata(messages_to_send.topic_set)
+        end
+      end
+
+      if messages_to_send.pending_messages?
+        messages_to_send.messages
+      end
+      true
+    end
+
     def close
       @broker_pool.close
     end
