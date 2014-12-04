@@ -71,7 +71,7 @@ module Poseidon
     end
 
     def send_messages2(messages)
-      return true if messages.empty?
+      return [] if messages.empty?
 
       messages_to_send = MessagesToSend.new(messages, @cluster_metadata)
 
@@ -99,7 +99,7 @@ module Poseidon
       if messages_to_send.pending_messages?
         messages_to_send.messages
       end
-      true
+      []
     end
 
     def close
