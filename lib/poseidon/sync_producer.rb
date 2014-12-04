@@ -97,7 +97,7 @@ module Poseidon
       end
 
       if messages_to_send.pending_messages?
-        messages_to_send.messages
+        return messages_to_send.messages
       end
       []
     end
