@@ -165,6 +165,15 @@ module Poseidon
       @producer.send_messages(convert_to_messages_objects(messages))
     end
 
+    def send_messages2(messages)
+      raise Errors::ProducerShutdownError if @shutdown
+      if !messages.respond_to?(:each)
+        raise ArgumentError, "messages must respond to #each"
+      end
+
+      @producer.send_messages2(convert_to_messages_objects(messages))
+    end
+
     # Closes all open connections to brokers
     def close
       @shutdown = true
